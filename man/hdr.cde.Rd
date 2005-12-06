@@ -18,8 +18,8 @@ hdr.cde(den, prob = c(50, 95, 99), plot = TRUE, plot.modes = TRUE,
   \item{plot}{Should HDRs be plotted? If FALSE, results are returned.}
   \item{plot.modes}{Should modes be plotted as well as HDRs?}
   \item{mden}{Marginal density in the \code{x} direction. When small, the HDRs won't be plotted. Default is uniform so all HDRs are plotted.}
-  \item{threshold}{Threshold for margin density. HDRs are not plotted if the margin density is lower than this value.}
-  \item{nn}{Size of grid for evaluation}
+  \item{threshold}{Threshold for margin density. HDRs are not plotted if the margin density \code{mden} is lower than this value.}
+  \item{nn}{Number of points to be sampled from each density when estimating the HDRs.}
   \item{xlim}{Limits for x-axis.}
   \item{ylim}{Limits for y-axis.}
   \item{xlab}{Label for x-axis.}

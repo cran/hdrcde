@@ -1,5 +1,6 @@
 cde <- function(x, y, deg=0, link="identity", a, b, mean=NULL, 
-        x.margin,y.margin, x.name, y.name,use.locfit=FALSE,fw=TRUE,rescale=TRUE,...)
+        x.margin,y.margin, x.name, y.name,use.locfit=FALSE,fw=TRUE,rescale=TRUE,
+        nxmargin=15,nymargin=100,...)
 {
     xname = deparse(substitute(x))
     yname = deparse(substitute(y))
@@ -64,7 +65,7 @@ cde <- function(x, y, deg=0, link="identity", a, b, mean=NULL,
     {
         require(locfit)
         if(fw)
-            locfit.a <- c(0,2.5*a)  ## For fixed bandwidth of a in locfit, scaled to match standard definition
+            locfit.a <- c(0,5*a)  ## For fixed bandwidth of a in locfit
         else
             locfit.a <- a
     }
@@ -73,7 +74,7 @@ cde <- function(x, y, deg=0, link="identity", a, b, mean=NULL,
     if(miss.ymargin)
     {
         yrange <- range(y)
-        y.margin <- seq(yrange[1]-2*b,yrange[2]+2*b,l=50)
+        y.margin <- seq(yrange[1]-4*b,yrange[2]+4*b,l=nymargin)
     }
     else
         y.margin <- sort(y.margin)
@@ -90,7 +91,7 @@ cde <- function(x, y, deg=0, link="identity", a, b, mean=NULL,
         if(miss.xmargin)
         {
             xrange <- range(x[,i])
-            x.margin <- c(x.margin,list(seq(xrange[1],xrange[2],l=15)))
+            x.margin <- c(x.margin,list(seq(xrange[1],xrange[2],l=nxmargin)))
         }
         else
             x.margin[[i]] <- sort(x.margin[[i]])
@@ -101,17 +102,6 @@ cde <- function(x, y, deg=0, link="identity", a, b, mean=NULL,
     ##### Set up
     dim.cde <- c(length(y.margin),unlist(lapply(x.margin,length)))
     cde <- NULL
-
-    if(use.locfit)
-    {
-        x.form <- paste("newy ~",x.name[1])
-        if(nx>1)
-        {
-            for(i in 2:nx)
-                x.form <- paste(x.form,"+",x.name[i],sep="")
-        }
-    }
-
     GCV <- AIC <- numeric(dim.cde[1])
     n <- length(x)
 
@@ -120,7 +110,9 @@ cde <- function(x, y, deg=0, link="identity", a, b, mean=NULL,
     if(bias.adjust)
     {
         ymean <- mean(y)
+        oldwarn <- options(warn=-1)
         approx.mean <- approx(mean$x,mean$y,xout=x)$y
+        options(warn=oldwarn$warn)
         if(sum(is.na(approx.mean))>0)
             stop("Missing values in estimated mean")
         y <- y - approx.mean
@@ -129,16 +121,16 @@ cde <- function(x, y, deg=0, link="identity", a, b, mean=NULL,
 
 
     ##### Do the calculations
+    oldwarn <- options(warn=-1)
     xrange <- range(x[,1]) # How to handle multiple x??
     for(i in 1:dim.cde[1])
     {
         newy <- Kernel(y,y.margin[i],b,type="normal")
-        if(max(abs(newy))==0)
+        if(max(abs(newy)) < 1e-20)
         {
             cde <- c(cde,rep(0,length(x.margin[[1]])))
         }
         else if(!use.locfit)
-
         {
             junk <- ksmooth(x[,1],newy,bandwidth=2.697959*a,kernel="normal",x.points=x.margin[[1]])$y
             junk[is.na(junk)] <- 0 ## No data in these areas
@@ -146,17 +138,12 @@ cde <- function(x, y, deg=0, link="identity", a, b, mean=NULL,
         }
         else
         {
-            lkern <- "gauss"
-            junk <- locfit(as.formula(x.form),data=data.frame(newy=newy,x=x),
-                    alpha=locfit.a,deg=deg,link=link,family="qgauss",
-                    kern=lkern,flim=xrange,maxit=400,...)
+            junk <- locfit.raw(x,newy, alpha=locfit.a,deg=deg,link=link,family="qgauss",
+                    kern="gauss",xlim=xrange,maxit=400,...)
             sum.coef <- sum(abs(junk$eva$coef))
-            no.predict <- (is.na(junk$dp["rv"]) | is.na(sum.coef))
-            if(!no.predict & (junk$dp["rv"] > 1e10 | sum.coef > 1e10))
-                no.predict <- TRUE
-            if(!no.predict)
+            fits <- try(predict(junk,newdata=as.matrix(x.margin.grid)),silent=TRUE)
+            if(class(fits)!="try-error")
             {
-                fits <- predict(junk,newdata=as.matrix(x.margin.grid))
                 AIC[i] <- -2 * junk$dp["lk"] + 2 * junk$dp["df2"]
                 GCV[i] <- (-2 * n * junk$dp["lk"])/(n - junk$dp["df2"])^2
             }
@@ -169,7 +156,7 @@ cde <- function(x, y, deg=0, link="identity", a, b, mean=NULL,
             cde <- c(cde,list(array(fits,dim.cde[-1])))
         }
     }
-    
+    options(warn=oldwarn$warn)
 
     AIC[AIC==Inf] <- 1.5*max(AIC[AIC<Inf])
     GCV[GCV==Inf] <- 1.5*max(GCV[GCV<Inf])
@@ -200,13 +187,21 @@ cde <- function(x, y, deg=0, link="identity", a, b, mean=NULL,
     # Bias adjustment
     if(bias.adjust)
     {
-        approx.mean <- approx(mean$x,mean$y,xout=x.margin[[1]])$y
+#        browser()
+        oldwarn <- options(warn=-1)
+        approx.mean <- approx(mean$x,mean$y,xout=x.margin[[1]],rule=2)$y
+        options(warn=oldwarn$warn)
         for(i in 1:dim.cde[2])
-            z[i,] <- approx(y.margin+approx.mean[i],z[i,],xout=y.margin+ymean)$y
+        {
+            amean <- approx.mean[i] - sum(z[i,]*y.margin)*(y.margin[2]-y.margin[1])
+            z[i,] <- approx(y.margin+amean,z[i,],xout=y.margin+ymean)$y
+        }
         z[is.na(z)] <- 0
         y.margin <- y.margin + ymean
     }
-        
+    
+#    browser()
+    
     ## Return the result
     if(nx==1)
         x.margin <- x.margin[[1]]  ## No need to keep it as a list.

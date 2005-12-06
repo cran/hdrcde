@@ -9,7 +9,7 @@ polynomial estimation.}
 \usage{
 cde(x, y, deg = 0, link = "identity", a, b, mean, 
   x.margin, y.margin, x.name, y.name, 
-  use.locfit = FALSE, fw = TRUE, rescale = TRUE, ...)
+  use.locfit = FALSE, fw = TRUE, rescale = TRUE, nxmargin=15, nymargin=100, ...)
 }
 \arguments{
   \item{x}{Numerical vector: the conditioning variable.}
@@ -19,8 +19,8 @@ cde(x, y, deg = 0, link = "identity", a, b, mean,
   \item{a}{Optional bandwidth in x direction.}
   \item{b}{Optional bandwidth in y direction.}
   \item{mean}{Estimated mean of y|x. If present, it will adjust conditional density to have this mean.}
-  \item{x.margin}{Values in x-space on which conditional density is calculated. If not specified, an equi-spaced grid of 15 values over the range of x is used. }
-  \item{y.margin}{Values in y-space on which conditional density is calculated. If not specified, an equi-spaced grid of 50 values over the range of y is used. }
+  \item{x.margin}{Values in x-space on which conditional density is calculated. If not specified, an equi-spaced grid of \code{nxmargin} values over the range of x is used.}
+  \item{y.margin}{Values in y-space on which conditional density is calculated. If not specified, an equi-spaced grid of \code{nymargin} values over the range of y is used.}
   \item{x.name}{Optional name of x variable used in plots.}
   \item{y.name}{Optional name of y variable used in plots.}
   \item{use.locfit}{If TRUE, will use \code{\link[locfit]{locfit}} for estimation. Otherwise \code{\link[base]{ksmooth}} 
@@ -28,6 +28,8 @@ cde(x, y, deg = 0, link = "identity", a, b, mean,
    greater than 1 even if \code{use.locfit=FALSE}.}
   \item{fw}{If TRUE (default), will use fixed window width estimation. Otherwise nearest neighbourhood estimation is used. If the dimension of x is greater than 1, nearest neighbourhood must be used.}
   \item{rescale}{If TRUE (default), will rescale the conditional densities to integrate to one.}
+  \item{nxmargin}{Number of values used in \code{x.margin} by default.}
+  \item{nymargin}{Number of values used in \code{y.margin} by default.}
   \item{\dots}{Additional arguments are passed to locfit.}
 }
 \value{A list with the following components:
@@ -65,8 +67,8 @@ for conditional density functions". \emph{Journal of Nonparametric Statistics},
 \examples{
 # Old faithful data
 faithful.cde <- cde(faithful$waiting, faithful$eruptions, x.name="Waiting time", y.name="Duration time")
-plot(faithful.cde,)
-plot(faithful.cde,plot.fn="hdr")
+plot(faithful.cde)
+plot(faithful.cde, plot.fn="hdr")
 
 # Melbourne maximum temperatures with bias adjustment
 x <- maxtemp[1:3649]

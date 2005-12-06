@@ -61,6 +61,14 @@ stacked.plot <- function(den,mden=rep(1,length(den$x)),threshold=0.05,main="",xl
             stop("I can't handle more than 2 covariates")
     }
 
+
+    if(length(den$x)==1)
+    {
+        plot(den$y,den$z[1,],type='l',xlab=ylab,ylab="Density",main=paste(ylab,"|",xlab,"=",den$x))
+#        mtext(main,3,cex=1,font=font)
+        return(invisible())
+    }
+
     oldpar <- par()
     par(mar=c(1,0,0,1)+.1)
     maxden <- max(den$z,na.rm=TRUE)
