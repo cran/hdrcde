@@ -6,7 +6,9 @@ hdr.boxplot.2d          Bivariate Highest Density Regions
 hdr.cde                 Calculate highest density regions continously
                         over some conditioned variable.
 hdrconf                 HDRs with confidence intervals
+lane2                   Speed-Flow data for Californian Freeway
 maxtemp                 Daily maximum temperatures in Melbourne,
                         Australia
+modalreg                Nonparametric Multimodal Regression
 plot.cde                Plots conditional densities
 plot.hdrconf            Plot HDRs with confidence intervals

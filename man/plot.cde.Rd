@@ -33,7 +33,8 @@ Computational and Graphical Statistics}, \bold{5}, 315-336.
 \seealso{\code{\link{hdr.cde}}, \code{\link{cde}}, \code{\link{hdr}}}
 
 \examples{
-faithful.cde <- cde(faithful$waiting,faithful$eruptions, x.name="Waiting time", y.name="Duration time")
+faithful.cde <- cde(faithful$waiting,faithful$eruptions, 
+    x.name="Waiting time", y.name="Duration time")
 plot(faithful.cde)
 plot(faithful.cde,plot.fn="hdr")
 }

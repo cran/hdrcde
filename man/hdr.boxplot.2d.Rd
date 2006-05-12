@@ -5,7 +5,9 @@
 Calculates and plots highest density regions in two dimensions, including the
 bivariate HDR boxplot.}
 \usage{
-hdr.boxplot.2d(x, y, prob=c(0.01,0.50), h = c(5,5), show.points = FALSE, xlab="", ylab="", ...) }
+hdr.boxplot.2d(x, y, prob=c(0.01,0.50), h = c(5,5), 
+    show.points = FALSE, xlab="", ylab="", ...) 
+}
 \arguments{
   \item{x}{Numeric vector}
   \item{y}{Numeric vector of same length as \code{x}.}

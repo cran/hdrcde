@@ -22,7 +22,7 @@ hdr <- function(x=NULL,prob=c(50,95,99),den=NULL,h=NULL,nn=5000,all.modes=FALSE)
         hdr.store[i,] <- c(junk,rep(NA,100-length(junk)))
     }
     cj <- colSums(is.na(hdr.store))
-    hdr.store <- hdr.store[,cj < nrow(hdr.store)]
+    hdr.store <- matrix(hdr.store[,cj < nrow(hdr.store)],nrow=length(prob))
     rownames(hdr.store) <- paste(100*(1-alpha),"%",sep="")
     if(all.modes)
     {
