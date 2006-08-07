@@ -1,6 +1,5 @@
 \name{cde}
 \alias{cde}
-\alias{cde.est}
 \title{Conditional Density Estimation}
 
 \description{Calculates kernel conditional density estimate using local
@@ -46,7 +45,7 @@ cde(x, y, deg = 0, link = "identity", a, b, mean,
 reference rules described in Bashtannyk and Hyndman (2001) and 
 Hyndman and Yao (2002). Bias adjustment uses the method described in 
 Hyndman, Bashtannyk and Grunwald (1996). If deg>1 then estimation is 
-based on the method of Hyndman and Yao (2002).}
+based on the local parametric estimator of Hyndman and Yao (2002).}
 
 \references{Hyndman, R.J., Bashtannyk, D.M. and Grunwald, G.K. (1996)
 "Estimating and visualizing conditional densities". \emph{Journal of
