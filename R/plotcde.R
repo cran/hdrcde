@@ -1,4 +1,4 @@
-plot.cde <- function(x, firstvar=1, mfrow=c(2,2), plot.fn="stacked",x.name,margin=NULL,...)
+plot.cde <- function(x, firstvar=1, mfrow=n2mfrow(dim(x$z)[firstvar]), plot.fn="stacked",x.name,margin=NULL,...)
 {
     dimz <- dim(x$z)
     if(plot.fn=="hdr")
@@ -24,6 +24,13 @@ plot.cde <- function(x, firstvar=1, mfrow=c(2,2), plot.fn="stacked",x.name,margi
     index <- firstvar + (firstvar==1) - (firstvar==2)
     small.den$x <- x$x[[index]]
     small.den$x.name <- x.name[index]
+    xlabels <- x$x[[firstvar]]
+    if(max(xlabels)-min(xlabels) > 30)
+        xlabels <- round(xlabels)
+    else if(max(xlabels) - min(xlabels) > 3)
+        xlabels <- round(xlabels,1)
+    else if(max(xlabels) - min(xlabels) > 0.3)
+        xlabels <- round(xlabels,2)
     for(i in 1:dimz[firstvar])
     {
         if(firstvar==1)
@@ -34,7 +41,7 @@ plot.cde <- function(x, firstvar=1, mfrow=c(2,2), plot.fn="stacked",x.name,margi
             mden <- margin[,i]
         else
             mden <- rep(1,length(small.den$x))
-        fn(small.den,main=paste(x.name[firstvar],"=",x$x[[firstvar]][i]),mden=mden,...)
+        fn(small.den,main=paste(x.name[firstvar],"=",xlabels[i]),mden=mden,...)
     }
     par(mfrow=oldpar$mfrow)
     invisible()
@@ -48,6 +55,8 @@ stacked.plot <- function(den,mden=rep(1,length(den$x)),threshold=0.05,main="",xl
         xlab <- den$x.name
 
     # Omit missing values
+    if(!is.matrix(den$z))
+        den$z <- matrix(den$z,nrow=1)
     nz <- dim(den$z)
     miss <- (1:length(den$y))[is.na(apply(den$z,length(nz),sum))]
     if(length(miss)>0)
@@ -64,8 +73,9 @@ stacked.plot <- function(den,mden=rep(1,length(den$x)),threshold=0.05,main="",xl
 
     if(length(den$x)==1)
     {
-        plot(den$y,den$z[1,],type='l',xlab=ylab,ylab="Density",main=paste(ylab,"|",xlab,"=",den$x))
-#        mtext(main,3,cex=1,font=font)
+        main <- paste(ylab,"|",xlab,"=",den$x)
+        plot(den$y,den$z[1,],type='l',xlab=ylab,ylab="Density")
+        mtext(main,3,cex=1,font=font)
         return(invisible())
     }
 
@@ -79,10 +89,11 @@ stacked.plot <- function(den,mden=rep(1,length(den$x)),threshold=0.05,main="",xl
     yrange <- ylim[2]-ylim[1]
     junk <- persp(xlim,ylim,cbind(rep(0,2),rep(maxden,2)), zlim=zlim,box=FALSE,axes=FALSE,
         theta=-75,phi=25,border=NA,...)
-    mtext(main,3,cex=1.0,font=font)
+    mtext(main,3,cex=1,font=font,line=-4)
+
 
     # Function to enable things to be added to perspective plot
-    perspp <- function(x,y,z, pmat) 
+    perspp <- function(x,y,z, pmat)
     {
       tr <- cbind(x,y,z,1) %*% pmat
       list(x = tr[,1]/tr[,4], y= tr[,2]/tr[,4])

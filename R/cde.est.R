@@ -1,4 +1,4 @@
-cde <- function(x, y, deg=0, link="identity", a, b, mean=NULL, 
+cde <- function(x, y, deg=0, link="identity", a, b, mean=NULL,
         x.margin,y.margin, x.name, y.name,use.locfit=FALSE,fw=TRUE,rescale=TRUE,
         nxmargin=15,nymargin=100,...)
 {
@@ -14,10 +14,10 @@ cde <- function(x, y, deg=0, link="identity", a, b, mean=NULL,
 
     x <- as.matrix(x)
     nx <- ncol(x)
-    
+
     if(bias.adjust & nx>1)
         stop("Bias adjustment not implemented for multiple conditioning variables")
-    
+
     use.locfit <- (link!="identity" | deg>0 | use.locfit | nx>1 | !fw)
     fw <- (fw & nx==1)
     rescale <- (rescale | use.locfit)
@@ -138,8 +138,10 @@ cde <- function(x, y, deg=0, link="identity", a, b, mean=NULL,
         }
         else
         {
+            yscale <- mean(newy)
+            newy <- newy/yscale
             junk <- locfit.raw(x,newy, alpha=locfit.a,deg=deg,link=link,family="qgauss",
-                    kern="gauss",xlim=xrange,maxit=400,...)
+                    kern="gauss",maxit=400,...)
             sum.coef <- sum(abs(junk$eva$coef))
             fits <- try(predict(junk,newdata=as.matrix(x.margin.grid)),silent=TRUE)
             if(class(fits)!="try-error")
@@ -153,7 +155,7 @@ cde <- function(x, y, deg=0, link="identity", a, b, mean=NULL,
                 AIC[i] <- Inf  # or something huge
                 GCV[i] <- Inf
             }
-            cde <- c(cde,list(array(fits,dim.cde[-1])))
+            cde <- c(cde,list(array(fits*yscale,dim.cde[-1])))
         }
     }
     options(warn=oldwarn$warn)
@@ -183,7 +185,7 @@ cde <- function(x, y, deg=0, link="identity", a, b, mean=NULL,
         z <- z/delta
     }
     z[z<0] <- 0
-    
+
     # Bias adjustment
     if(bias.adjust)
     {
@@ -199,9 +201,9 @@ cde <- function(x, y, deg=0, link="identity", a, b, mean=NULL,
         z[is.na(z)] <- 0
         y.margin <- y.margin + ymean
     }
-    
+
 #    browser()
-    
+
     ## Return the result
     if(nx==1)
         x.margin <- x.margin[[1]]  ## No need to keep it as a list.

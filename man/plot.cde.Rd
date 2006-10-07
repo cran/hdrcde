@@ -5,7 +5,7 @@
 Produces stacked density plots or highest density region plots for a univariate density conditional on one covariate.
 }
 \usage{
-plot.cde(x, firstvar = 1, mfrow = c(2, 2), plot.fn = "stacked",
+plot.cde(x, firstvar = 1, mfrow = n2mfrow(dim(x$z)[firstvar]), plot.fn = "stacked",
     x.name, margin = NULL, ...)
 }
 \arguments{
