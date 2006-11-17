@@ -221,6 +221,95 @@ function(x,y,method=1,y.margin,sdlinear=FALSE,xden="normal",penalty=4,
     return(list(a=hstar,b=bstar,sigma=sigma,d1=d1,d2=d2,v=v))
 }
 
+cdeband.Mbh <- function(x,y,a.grid,b,ny=50,use.sample=FALSE,nx=100,y.margin,passes=2,deg=deg,
+    link="identity",usequad=TRUE,GCV=TRUE,ngrid=10)
+{
+    ## Initialization
+
+    bands <- cdeband.rules(x,y,deg=deg,link=link)
+    if(missing(a.grid))
+        a.grid <- bands$a*seq(0.1,5,l=ngrid)
+    if(missing(b))
+        b <- bands$b
+    a.grid <- a.grid[a.grid>0]
+    na <- length(a.grid)
+
+    n <- length(x)
+    if(use.sample & n > nx)
+        idx <- sample(1:n,nx,replace=F)
+    else
+        idx <- 1:n
+    xx <- x[idx]
+    yy <- y[idx]
+    if(missing(y.margin))
+        y.margin <- seq(min(y),max(y),l=ny)
+
+    ## First pass
+
+    first <- CDEband.Mbh(xx,yy,a.grid,b,y.margin,deg,link,GCV=GCV)
+    if(is.na(first$a)) # Expand grid
+    {
+        a.grid <- seq(a.grid[1]/20,1.1*a.grid[na],l=ngrid)
+        firstb <- CDEband.Mbh(xx,yy,a.grid,b,y.margin,deg,link,GCV=GCV)
+        first$a.grid <- c(first$a.grid,firstb$a.grid)
+        idx <- order(first$a.grid)
+        first$q <- c(first$q,firstb$q)[idx]
+        first$a.grid <- first$a.grid[idx]
+        first$a <- firstb$a
+    }
+
+    ## Second pass
+
+    if(passes>1 & !is.na(first$a))
+    {
+        na <- length(first$a.grid)
+        idx <- c(1:na)[first$a.grid==first$a]
+        if(na>4)
+            idx <- idx + (-2:2)
+        else
+            idx <- idx + (-1:1)
+        idx <- idx[idx>=1 & idx<=na]
+        newa.grid <- seq(0.95*first$a.grid[idx[1]],1.05*first$a.grid[idx[length(idx)]],l=ngrid)
+        second <- CDEband.Mbh(xx,yy,newa.grid,b,y.margin,deg=deg,link=link,GCV=GCV)
+        fulla.grid <- c(first$a.grid,second$a.grid)
+        idx <- order(fulla.grid)
+        fullq <- c(first$q,second$q)[idx]
+        fulla.grid <- fulla.grid[idx]
+        a <- second$a
+    }
+    else
+    {
+        a <- first$a
+        fulla.grid <- first$a.grid
+        fullq <- first$q
+    }
+
+    ## Quadratic solution
+
+    if(!is.na(a) & usequad)
+    {
+        na <- length(fulla.grid)
+        idx <- (c(1:na)[fulla.grid==a])[1]
+        if(na>4)
+            idx <- idx + (-2:2)
+        else
+            idx <- idx + (-1:1)
+        idx <- idx[idx>=1 & idx<=na & fullq[idx] != Inf]
+        if(length(idx)>3)
+        {
+            fit <- lm(q ~ a+I(a^2),data=data.frame(q=fullq[idx],a=fulla.grid[idx]))
+            a <- -0.5*fit$coef[2]/fit$coef[3]
+        }
+    }
+    else
+    {
+        a <- fulla.grid[fullq==min(fullq,na.rm=T)]
+        a <- a[!is.na(a)]
+    }
+
+    return(list(a=a,b=b,a.grid=fulla.grid,q=fullq))
+}
+
 CDEband.Mbh <- function(x,y,a.grid,b,y.margin,deg=deg,link=link,GCV=TRUE)
 {
     na <- length(a.grid)
@@ -309,11 +398,11 @@ CDEband.Mbh <- function(x,y,a.grid,b,y.margin,deg=deg,link=link,GCV=TRUE)
     ## First pass
 
     for(i in 1:na)
-    {   
+    {
         a <- a.grid[i]
         for(j in 1:nb)
         {
-            b <- b.grid[j]  
+            b <- b.grid[j]
             cat("(",round(a,3),",",round(b,3),") ",sep="")
             for(k in 1:3)
             {
@@ -321,7 +410,7 @@ CDEband.Mbh <- function(x,y,a.grid,b,y.margin,deg=deg,link=link,GCV=TRUE)
                 diff.cde[k] <- sum((bootcde$z - truecde$z)^2)/(m*nx)
             }
             imse[i,j] <- mean(diff.cde[1:3])
-        }   
+        }
     }
     cat("\n")
 
@@ -334,11 +423,11 @@ CDEband.Mbh <- function(x,y,a.grid,b,y.margin,deg=deg,link=link,GCV=TRUE)
     idx.b <- idx.b[idx.b>0 & idx.b <=nb]
 
     for(i in idx.a)
-    {   
+    {
         a <- a.grid[i]
         for(j in idx.b)
         {
-            b <- b.grid[j]  
+            b <- b.grid[j]
             cat("(",round(a,3),",",round(b,3),") ",sep="")
             for(k in 4:m)
             {
@@ -346,7 +435,7 @@ CDEband.Mbh <- function(x,y,a.grid,b,y.margin,deg=deg,link=link,GCV=TRUE)
                 diff.cde[k] <- sum((bootcde$z - truecde$z)^2)/(m*nx)
             }
             imse[i,j] <- (3*imse[i,j] + (m-3)*mean(diff.cde[4:m]))/m
-        }   
+        }
     }
     cat("\n")
 
@@ -380,7 +469,7 @@ CDEband.Mbh <- function(x,y,a.grid,b,y.margin,deg=deg,link=link,GCV=TRUE)
                 best.b <- bestb
                 best.a <- a.grid[idx.a[i]]
                 bestmse <- minimse
-            }           
+            }
         }
     }
     else if(na>2) # nb=1 or 2
@@ -395,7 +484,7 @@ CDEband.Mbh <- function(x,y,a.grid,b,y.margin,deg=deg,link=link,GCV=TRUE)
                 best.a <- besta
                 best.b <- b.grid[idx.b[i]]
                 bestmse <- minimse
-            }           
+            }
         }
     }
 
@@ -431,9 +520,9 @@ CDEband.regress <- function(x, y, a.grid, b, y.margin, penalty=4, tol=0.999)
 #        if(sum(diag.w>tol)>0)
 #            q[i] <- Inf
 #        else
-#        {       
+#        {
 #            pen <- switch(penalty,1+2*diag.w,1/(1-diag.w)^2,exp(2*diag.w),(1+diag.w)/(1-diag.w),1/(1-2*diag.w))
-#            q[i] <- mean(apply(junk,1,sum)*pen)     
+#            q[i] <- mean(apply(junk,1,sum)*pen)
 #        }
     }
     cat("\n")

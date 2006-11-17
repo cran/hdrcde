@@ -5,8 +5,8 @@
 Produces stacked density plots or highest density region plots for a univariate density conditional on one covariate.
 }
 \usage{
-plot.cde(x, firstvar = 1, mfrow = n2mfrow(dim(x$z)[firstvar]), plot.fn = "stacked",
-    x.name, margin = NULL, ...)
+\method{plot}{cde}(x, firstvar = 1, mfrow = n2mfrow(dim(x$z)[firstvar]), plot.fn = "stacked",
+	x.name, margin = NULL, ...)
 }
 \arguments{
   \item{x}{Output from \code{\link{cde}}.}
@@ -19,7 +19,7 @@ plot.cde(x, firstvar = 1, mfrow = n2mfrow(dim(x$z)[firstvar]), plot.fn = "stacke
 }
 \value{If \code{plot.fn=="stacked"} and there is only one
 conditioning variable, the function returns the output from \code{\link[graphics]{persp}}.
-    If \code{plot.fn=="hdr"} and there is only one
+	If \code{plot.fn=="hdr"} and there is only one
 conditioning variable, the function returns the output from \code{\link{hdr.cde}}. When there is more than one
 conditioning variable, nothing is returned.}
 
@@ -34,7 +34,7 @@ Computational and Graphical Statistics}, \bold{5}, 315-336.
 
 \examples{
 faithful.cde <- cde(faithful$waiting,faithful$eruptions, 
-    x.name="Waiting time", y.name="Duration time")
+	x.name="Waiting time", y.name="Duration time")
 plot(faithful.cde)
 plot(faithful.cde,plot.fn="hdr")
 }

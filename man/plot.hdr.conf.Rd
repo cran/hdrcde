@@ -4,7 +4,7 @@
 \description{Plots Highest Density Regions with confidence intervals.
 }
 \usage{
-plot.hdrconf(x, den, ...)
+\method{plot}{hdrconf}(x, den, ...)
 }
 \arguments{
   \item{x}{Output from \code{hdrconf}.}
@@ -31,10 +31,10 @@ sortx <- sort(x)
 par(mfcol=c(2,2))
 for(conf in c(50,95))
 {
-    m <- hdrconf(sortx,trueden,conf=conf)
-    plot(m,trueden,main=paste(conf,"\% HDR from true density"))
-    m <- hdrconf(sortx,den,conf=conf)
-    plot(m,den,main=paste(conf,"\% HDR from empirical density\n(n=200)"))
+	m <- hdrconf(sortx,trueden,conf=conf)
+	plot(m,trueden,main=paste(conf,"\% HDR from true density"))
+	m <- hdrconf(sortx,den,conf=conf)
+	plot(m,den,main=paste(conf,"\% HDR from empirical density\n(n=200)"))
 }
 }
 
