@@ -8,7 +8,7 @@ polynomial estimation.}
 \usage{
 cde(x, y, deg = 0, link = "identity", a, b, mean,
   x.margin, y.margin, x.name, y.name,
-  use.locfit = FALSE, fw = TRUE, rescale = TRUE, nxmargin=15, nymargin=100, ...)
+  use.locfit = FALSE, fw = TRUE, rescale = TRUE, nxmargin=15, nymargin=100, a.nndefault=0.3, ...)
 }
 \arguments{
   \item{x}{Numerical vector or matrix: the conditioning variable(s).}
@@ -19,7 +19,7 @@ cde(x, y, deg = 0, link = "identity", a, b, mean,
   \item{b}{Optional bandwidth in y direction.}
   \item{mean}{Estimated mean of y|x. If present, it will adjust conditional density to have this mean.}
   \item{x.margin}{Values in x-space on which conditional density is calculated. If not specified, an equi-spaced grid of \code{nxmargin} values over the range of x is used.
-    If x is a matrix, x.margin should be a list of two numerical vectors.}
+	If x is a matrix, x.margin should be a list of two numerical vectors.}
   \item{y.margin}{Values in y-space on which conditional density is calculated. If not specified, an equi-spaced grid of \code{nymargin} values over the range of y is used.}
   \item{x.name}{Optional name of x variable used in plots.}
   \item{y.name}{Optional name of y variable used in plots.}
@@ -30,6 +30,7 @@ cde(x, y, deg = 0, link = "identity", a, b, mean,
   \item{rescale}{If TRUE (default), will rescale the conditional densities to integrate to one.}
   \item{nxmargin}{Number of values used in \code{x.margin} by default.}
   \item{nymargin}{Number of values used in \code{y.margin} by default.}
+  \item{a.nndefault}{Default nearest neighbour bandwidth (used only if \code{fw=FALSE} and \code{a} is missing.).}
   \item{\dots}{Additional arguments are passed to locfit.}
 }
 \value{A list with the following components:
@@ -67,7 +68,7 @@ for conditional density functions". \emph{Journal of Nonparametric Statistics},
 \examples{
 # Old faithful data
 faithful.cde <- cde(faithful$waiting, faithful$eruptions,
-    x.name="Waiting time", y.name="Duration time")
+	x.name="Waiting time", y.name="Duration time")
 plot(faithful.cde)
 plot(faithful.cde, plot.fn="hdr")
 
@@ -75,12 +76,12 @@ plot(faithful.cde, plot.fn="hdr")
 x <- maxtemp[1:3649]
 y <- maxtemp[2:3650]
 maxtemp.cde <- cde(x,y,
-    x.name="Today's max temperature",y.name="Tomorrow's max temperature")
+	x.name="Today's max temperature",y.name="Tomorrow's max temperature")
 # Assume linear mean
 fit <- lm(y~x)
 fit.mean <- list(x=6:45,y=fit$coef[1]+fit$coef[2]*(6:45))
 maxtemp.cde2 <- cde(x,y,mean=fit.mean,
-    x.name="Today's max temperature",y.name="Tomorrow's max temperature")
+	x.name="Today's max temperature",y.name="Tomorrow's max temperature")
 plot(maxtemp.cde)
 }
 \keyword{smooth}

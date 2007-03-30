@@ -8,7 +8,7 @@ Calculates and plots highest density regions in one dimension including the HDR 
 }
 \usage{
 hdr(x, prob = c(50, 95, 99), den, h, nn=5000, all.modes=FALSE)
-hdr.den(x, prob = c(50, 95, 99), den, h, xlab="", ylab="", ...)
+hdr.den(x, prob = c(50, 95, 99), den, h, xlab=NULL, ylab="Density", ...)
 hdr.boxplot(x, prob = c(99, 50), h, boxlabels = "", col = gray((9:1)/10), 
     main="", xlab="", ylab="", pch=1, ...)
 }
