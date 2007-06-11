@@ -33,15 +33,15 @@ Varaiya, P., and  Al-Deek, H.  (1996). ``The Freeway Service Patrol Evaluation P
 Database Support Programs, and Accessibility''. \emph{Transportation Research Part C: Emerging
 Technologies}, \bold{4}, 71-85.
 
-The data is provided courtesy of CALIFORNIA PATH, Institute of Transportation Studies,
+The data is provided by courtesy of CALIFORNIA PATH, Institute of Transportation Studies,
 University of California, Berkeley.
 }
 
 \references{Einbeck, J., and Tutz, G. (2006). ``Modelling beyond regression functions:
- an application of multimodal regression to speed-flow data''. \emph{Applied Statistics},
- 2006, in press.}
+ an application of multimodal regression to speed-flow data''. \emph{Journal of the Royal Statistical Society, Series C (Applied Statistics)},
+ \bold{55}, 461-475.}
 
 \keyword{datasets}
 \examples{
-plot(lane2$flow, lane2$speed)
+ plot(lane2$flow, lane2$speed)
 }

@@ -25,8 +25,9 @@ cde.bandwidths(x, y, deg = 0, link = "identity", method = 1,
   \item{min.a}{Smallest value of a to consider if method=1.}
   \item{ny}{Number of values to use for y margin if \code{y.margin} is missing.}
   \item{use.sample}{Used when regression method (3) is chosen.}
-  \item{GCV}{Generalized cross-validation. Used in method 1 only.}
-  \item{b}{Value of b can be specified for method 1 only.}
+  \item{GCV}{Generalized cross-validation. Used only if method=1 and deg>0. If GCV=FALSE, method=1 and deg=0, then the AIC is used instead.
+    The argument is ignored if deg=0 or method>1.}
+  \item{b}{Value of b can be specified only if method=1 and deg>0. For deg=0 or method>1, this argument is ignored.}
   \item{\dots}{Other arguments control details for individual methods.}
 }
 \value{
