@@ -1,8 +1,25 @@
-hdr.boxplot.2d <- function(x, y, prob=c(0.01,0.50), h=c(5,5), show.points=FALSE, xlab="", ylab="", ...)
+hdr.boxplot.2d <- function(x, y, prob=c(0.01,0.50), h, show.points=FALSE, xlab="", ylab="", kde.package=c("ash","ks"),...)
 {
     # Plots bivariate HDRs in form of boxplot.
-    require(ash)
-    den <- ash2(bin2(cbind(x,y)),h)
+    kde.package <- match.arg(kde.package)
+    if(kde.package=="ash")
+    {
+        require(ash)
+        if(missing(h))
+            h <- c(5,5)
+        den <- ash2(bin2(cbind(x,y)),h)
+    }
+    else
+    {
+        require(ks)
+        X <- cbind(x,y)
+        if(missing(h))
+            h <- Hpi.diag(X,binned=TRUE)
+        else
+            h <- diag(h)
+        den <- kde(x=X,H=h)
+        den <- list(x=den$eval.points[[1]],y=den$eval.points[[2]],z=den$estimate)
+    }
     plothdr2d(x, y, den, prob, show.points=FALSE, xlab=xlab, ylab=ylab, ...)
 }
 
@@ -12,7 +29,7 @@ plothdr2d <- function(x, y, den, alpha=c(0.01,0.05,0.50), shaded=TRUE, show.poin
     cols <- gray((9:1)/10)
     hdr <- hdr.info.2d(x, y, den, alpha=alpha)
     if(shaded)
-        filled.contour(den$x,den$y,den$z,levels=c(hdr$falpha,1e10),col=cols,key=FALSE,...)
+        hdrcde.filled.contour(den$x,den$y,den$z,levels=c(hdr$falpha,1e10),col=cols,...)
     else
         contour(den,levels=hdr$falpha,labcex=0,...)
     if(show.points)
@@ -26,64 +43,24 @@ plothdr2d <- function(x, y, den, alpha=c(0.01,0.05,0.50), shaded=TRUE, show.poin
     invisible(hdr)
 }
 
-filled.contour <- function (x = seq(0, 1, len = nrow(z)), y = seq(0, 1, len = ncol(z)), 
-    z, xlim = range(x, finite = TRUE), ylim = range(y, finite = TRUE), 
-    zlim = range(z, finite = TRUE), levels = pretty(zlim, nlevels), 
-    nlevels = 20, color.palette = cm.colors, col = color.palette(length(levels) - 
-        1), plot.title, plot.axes, key.title, key.axes, asp = NA, 
-    xaxs = "i", yaxs = "i", las = 1, axes = TRUE, key=TRUE, ...) 
+hdrcde.filled.contour <- function (x,y,z, xlim = range(x, finite = TRUE), 
+    ylim = range(y, finite = TRUE), zlim = range(z, finite = TRUE), 
+    levels = pretty(zlim, nlevels), nlevels = 20, color.palette = cm.colors, 
+    col = color.palette(length(levels) - 1), plot.title, plot.axes, 
+    asp = NA, xaxs = "i", yaxs = "i", las = 1, 
+    axes = TRUE, frame.plot = axes, ...) 
 {
-    if (missing(z)) {
-        if (!missing(x)) {
-            if (is.list(x)) {
-                z <- x$z
-                y <- x$y
-                x <- x$x
-            }
-            else {
-                z <- x
-                x <- seq(0, 1, len = nrow(z))
-            }
-        }
-        else stop("no `z' matrix specified")
-    }
-    else if (is.list(x)) {
-        y <- x$y
-        x <- x$x
-    }
     if (any(diff(x) <= 0) || any(diff(y) <= 0)) 
-        stop("increasing x and y values expected")
-    mar.orig <- (par.orig <- par(c("mar", "las", "mfrow")))$mar
-    on.exit(par(par.orig))
-    if(key)
-    {
-        w <- (3 + mar.orig[2]) * par("csi") * 2.54
-        layout(matrix(c(2, 1), nc = 2), widths = c(1, lcm(w)))
-        par(las = las)
-        mar <- mar.orig
-        mar[4] <- mar[2]
-        mar[2] <- 1
-        par(mar = mar)
-        plot.new()
-        plot.window(xlim = c(0, 1), ylim = range(levels), xaxs = "i", 
-            yaxs = "i")
-        rect(0, levels[-length(levels)], 1, levels[-1], col = col)
-        if (missing(key.axes)) {
-            if (axes) 
-                axis(4)
-        }
-        else key.axes
-        box()
-        if (!missing(key.title)) 
-            key.title
-    }
-    mar <- mar.orig
-    mar[4] <- 1
-    par(mar = mar)
+        stop("increasing 'x' and 'y' values expected")
+#    mar.orig <- (par.orig <- par(c("mar", "las", "mfrow")))$mar
+#    on.exit(par(par.orig))
+#    mar <- mar.orig
+#    mar[4] <- 1
+#    par(mar = mar)
     plot.new()
     plot.window(xlim, ylim, "", xaxs = xaxs, yaxs = yaxs, asp = asp)
     if (!is.matrix(z) || nrow(z) <= 1 || ncol(z) <= 1) 
-        stop("no proper `z' matrix specified")
+        stop("no proper 'z' matrix specified")
     if (!is.double(z)) 
         storage.mode(z) <- "double"
     .Internal(filledcontour(as.double(x), as.double(y), z, as.double(levels), 
@@ -91,17 +68,19 @@ filled.contour <- function (x = seq(0, 1, len = nrow(z)), y = seq(0, 1, len = nc
     if (missing(plot.axes)) {
         if (axes) {
             title(main = "", xlab = "", ylab = "")
-            axis(1)
-            axis(2)
+            Axis(x, side = 1)
+            Axis(y, side = 2)
         }
     }
     else plot.axes
-    box()
+    if (frame.plot) 
+        box()
     if (missing(plot.title)) 
         title(...)
     else plot.title
     invisible()
 }
+
 
 "hdr.info.2d" <- function(x, y, den, alpha)
 {

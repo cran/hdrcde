@@ -5,22 +5,24 @@
 Calculates and plots highest density regions in two dimensions, including the
 bivariate HDR boxplot.}
 \usage{
-hdr.boxplot.2d(x, y, prob=c(0.01,0.50), h = c(5,5), 
-    show.points = FALSE, xlab="", ylab="", ...) 
+hdr.boxplot.2d(x, y, prob=c(0.01,0.50), h, show.points = FALSE, 
+    xlab="", ylab="",  kde.package=c("ash","ks"), ...)
 }
 \arguments{
   \item{x}{Numeric vector}
   \item{y}{Numeric vector of same length as \code{x}.}
   \item{prob}{Probability coverage required for HDRs}
-  \item{h}{Pair of bandwidths passed to \code{\link[ash]{ash2}}.}
+  \item{h}{Pair of bandwidths passed to either \code{\link[ash]{ash2}} or \code{\link[ks]{kde}}. If missing,
+    a reasonable default is used.}
   \item{show.points}{If TRUE, will plot points over the top of contours.}
   \item{xlab}{Label for x-axis.}
   \item{ylab}{Label for y-axis.}
+  \item{kde.package}{Package to be used in calculating the kernel density estimate.}
   \item{\dots}{Other arguments to be passed to plot.}
 }
 
-\details{Scott's \code{\link[ash]{ash2}} is used to estimate the density using kernel
-estimation. Then Hyndman's (1996) density quantile algorithm is used to compute
+\details{The density is estimated using kernel density estimation. Either \code{\link[ash]{ash2}} or \code{\link[ks]{kde}} is used to 
+do the calculations. Then Hyndman's (1996) density quantile algorithm is used to compute
 the HDRs.}
 
 \references{Hyndman, R.J. (1996) Computing and graphing highest density regions
@@ -32,7 +34,7 @@ the HDRs.}
 
 
 \seealso{\code{\link{hdr.boxplot}}}
-}
+
 \examples{
 x <- c(rnorm(200,0,1),rnorm(200,4,1))
 y <- c(rnorm(200,0,1),rnorm(200,4,1))
