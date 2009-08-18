@@ -63,7 +63,7 @@ hdr.boxplot <- function(x,prob=c(99,50),h=NULL, boxlabels="", col= gray((9:1)/10
     for(i in 1:length(prob))
     {
         if(r>0) hdrlist[[i]] <- hdr.ends(den,info$falpha[i])$hdr
-        else hdrlist[[i]] <- c(x[1],x[n])
+        else hdrlist[[i]] <- c(x[1],x[1])
     }
     if(r>0) hdrlist$mode <- info$mode
     else hdrlist$mode <- x[1]

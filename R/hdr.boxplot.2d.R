@@ -20,7 +20,7 @@ hdr.boxplot.2d <- function(x, y, prob=c(0.01,0.50), h, show.points=FALSE, xlab="
         den <- kde(x=X,H=h)
         den <- list(x=den$eval.points[[1]],y=den$eval.points[[2]],z=den$estimate)
     }
-    plothdr2d(x, y, den, prob, show.points=FALSE, xlab=xlab, ylab=ylab, ...)
+    plothdr2d(x, y, den, prob, show.points=show.points, xlab=xlab, ylab=ylab, ...)
 }
 
 plothdr2d <- function(x, y, den, alpha=c(0.01,0.05,0.50), shaded=TRUE, show.points=TRUE,
