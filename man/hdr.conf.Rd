@@ -28,7 +28,7 @@ hdrconf(x, den, prob = 95, conf=95)
 
 \examples{
 x <- c(rnorm(100,0,1),rnorm(100,4,1))
-den <- density(x,bw=bw.SJ(x))
+den <- density(x,bw=hdrbw(x,50))
 trueden <- den
 trueden$y <- 0.5*(exp(-0.5*(den$x*den$x)) + exp(-0.5*(den$x-4)^2))/sqrt(2*pi)
 sortx <- sort(x)

@@ -1,4 +1,4 @@
-hdr <- function(x=NULL,prob=c(50,95,99),den=NULL,h=NULL,nn=5000,all.modes=FALSE)
+hdr <- function(x=NULL, prob=c(50,95,99), den=NULL, h=hdrbw(x,mean(prob)), nn=5000, all.modes=FALSE)
 {
     if(!is.null(x))
     {
@@ -7,7 +7,7 @@ hdr <- function(x=NULL,prob=c(50,95,99),den=NULL,h=NULL,nn=5000,all.modes=FALSE)
             stop("Insufficient data")
     }
     if(is.null(den))
-        den <- den.1d(x,h)
+        den <- density(x,bw=h)
     alpha <- sort(1-prob/100)
     falpha <- calc.falpha(x,den,alpha,nn=nn)
     hdr.store <- matrix(NA,length(alpha),100)

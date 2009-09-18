@@ -23,7 +23,7 @@ cde(x, y, deg = 0, link = "identity", a, b, mean,
   \item{y.margin}{Values in y-space on which conditional density is calculated. If not specified, an equi-spaced grid of \code{nymargin} values over the range of y is used.}
   \item{x.name}{Optional name of x variable used in plots.}
   \item{y.name}{Optional name of y variable used in plots.}
-  \item{use.locfit}{If TRUE, will use \code{\link[locfit]{locfit}} for estimation. Otherwise \code{\link[base]{ksmooth}}
+  \item{use.locfit}{If TRUE, will use \code{\link[locfit]{locfit}} for estimation. Otherwise \code{\link[stats]{ksmooth}}
   is used. \code{\link[locfit]{locfit}} is used if degree>0 or link not the identity or the dimension of x is
    greater than 1 even if \code{use.locfit=FALSE}.}
   \item{fw}{If TRUE (default), will use fixed window width estimation. Otherwise nearest neighbourhood estimation is used. If the dimension of x is greater than 1, nearest neighbourhood must be used.}

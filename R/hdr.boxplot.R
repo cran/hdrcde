@@ -1,4 +1,4 @@
-hdr.boxplot <- function(x,prob=c(99,50),h=NULL, boxlabels="", col= gray((9:1)/10), 
+hdr.boxplot <- function(x, prob=c(99,50), h=hdrbw(x,mean(prob)), boxlabels="", col= gray((9:1)/10), 
     main = "", xlab="",ylab="", pch=1,  ...)
 {
     if(!is.list(x))
@@ -47,7 +47,7 @@ hdr.boxplot <- function(x,prob=c(99,50),h=NULL, boxlabels="", col= gray((9:1)/10
 }
 
 
-"hdr.box" <- function(x, prob=c(99,50), h=NULL, ...)
+"hdr.box" <- function(x, prob=c(99,50), h, ...)
 {
     # Does all the calculations for an HDR boxplot of x and returns
     # the endpoints of the HDR sub-intervals and the mode in a list.
@@ -56,7 +56,7 @@ hdr.boxplot <- function(x,prob=c(99,50),h=NULL, boxlabels="", col= gray((9:1)/10
     r <- diff(range(x))
     if(r>0)
     {
-        den <- den.1d(x,h)
+        den <- density(x,bw=h)
         info <- calc.falpha(x,den,1-prob/100)
     }
     hdrlist <- list()
@@ -68,12 +68,4 @@ hdr.boxplot <- function(x,prob=c(99,50),h=NULL, boxlabels="", col= gray((9:1)/10
     if(r>0) hdrlist$mode <- info$mode
     else hdrlist$mode <- x[1]
     return(hdrlist)
-}
-
-den.1d <- function(x, h)
-{
-    if(missing(h) | is.null(h))
-        h <- bw.SJ(x)
-    # Computes density estimate of data in x
-    return(density(x,bw=h))
 }

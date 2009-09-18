@@ -11,7 +11,7 @@ Produces stacked density plots or highest density region plots for a univariate 
 \arguments{
   \item{x}{Output from \code{\link{cde}}.}
   \item{firstvar}{If there is more than one conditioning variable, \code{firstvar} specifies which variable to fix first.}
-  \item{mfrow}{If there is more than one conditioning variable, \code{mfrow} is passed to \code{\link[base]{par}} before plotting.}
+  \item{mfrow}{If there is more than one conditioning variable, \code{mfrow} is passed to \code{\link[graphics]{par}} before plotting.}
   \item{plot.fn}{Specifies which plotting function to use: "stacked" results in stacked conditional densities and "hdr" results in highest density regions.}
   \item{x.name}{Name of x (conditioning) variable for use on x-axis.}
   \item{margin}{Marginal density of conditioning variable. If present, only conditional densities corresponding to non-negligible marginal densities will be plotted.}

@@ -7,9 +7,9 @@
 Calculates and plots highest density regions in one dimension including the HDR boxplot.
 }
 \usage{
-hdr(x, prob = c(50, 95, 99), den, h, nn=5000, all.modes=FALSE)
-hdr.den(x, prob = c(50, 95, 99), den, h, xlab=NULL, ylab="Density", ...)
-hdr.boxplot(x, prob = c(99, 50), h, boxlabels = "", col = gray((9:1)/10), 
+hdr(x, prob = c(50, 95, 99), den, h=hdrbw(x,mean(prob)), nn=5000, all.modes=FALSE)
+hdr.den(x, prob = c(50, 95, 99), den, h=hdrbw(x,mean(prob)), xlab=NULL, ylab="Density", ...)
+hdr.boxplot(x, prob = c(99, 50), h=hdrbw(x,mean(prob)), boxlabels = "", col = gray((9:1)/10), 
     main="", xlab="", ylab="", pch=1, ...)
 }
 \arguments{
@@ -19,7 +19,7 @@ hdr.boxplot(x, prob = c(99, 50), h, boxlabels = "", col = gray((9:1)/10),
     For \code{hdr.boxplot}, \code{x} can be a list containing several vectors.}
   \item{prob}{Probability coverage required for HDRs}
   \item{den}{Density of data as list with components \code{x} and \code{y}.
-    If omitted, the density is estimated from \code{x} using \code{\link[base]{density}}.}
+    If omitted, the density is estimated from \code{x} using \code{\link[stats]{density}}.}
   \item{h}{Optional bandwidth for calculation of density.}
   \item{nn}{Number of random numbers used in computing f-alpha quantiles.}
   \item{all.modes}{Return all local modes or just the global mode?}
@@ -51,7 +51,7 @@ hdr(faithful$eruptions)
 hdr.boxplot(faithful$eruptions)
 hdr.den(faithful$eruptions)
 
-x <- c(rnorm(100,0,1), rnorm(100,3,1))
+x <- c(rnorm(100,0,1), rnorm(100,4,1))
 par(mfrow=c(1,2))
 boxplot(x)
 hdr.boxplot(x)

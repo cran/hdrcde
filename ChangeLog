@@ -1,0 +1,16 @@
+Changes in v2.11
+    * Added hdrbw() from Matt Wand to compute better bandwidths for hdr(), hdr.den() and hdr.boxplot().
+    * Fixed a few bugs in the help files.
+
+Changes in v2.10
+
+    * Bug fix in hdr.boxplot.2d(). The show.points option was not working.
+
+Changes in v2.09
+
+    * Bug fix: the a bandwidth in cde() when fw=TRUE and use.locfit=TRUE was twice as large as it should have been.
+
+Changes in v2.08
+
+    * Bug fix in hdr.boxplot.2d(). It would sometimes plot outliers on a separate plot.
+    * New argument to hdr.boxplot.2d() to allow the density to be estimated using the kde() function from the ks package.
