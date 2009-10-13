@@ -1,3 +1,4 @@
+BoxCox                  Box Cox Transformation
 cde                     Conditional Density Estimation
 cde.bandwidths          Bandwidth calculation for conditional density
                         estimation

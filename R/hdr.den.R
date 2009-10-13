@@ -1,7 +1,7 @@
-hdr.den <- function(x=NULL, prob=c(50,95,99), den=NULL, h=hdrbw(x,mean(prob)), xlab=NULL, ylab="Density",...)
+hdr.den <- function(x=NULL, prob=c(50,95,99), den=NULL, h=hdrbw(BoxCox(x,lambda),mean(prob)), lambda=1, xlab=NULL, ylab="Density",...)
 {
     if(missing(den))
-        den <- density(x,bw=h)
+        den <- tdensity(x,bw=h,lambda=lambda)
     else if(missing(x))
      x <- sample(den$x, 500, replace=TRUE, prob=den$y)
     hdr <- hdr(x,prob,den,h)

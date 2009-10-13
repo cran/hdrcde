@@ -1,3 +1,7 @@
+Changes in v2.112
+	* Modified hdr(), hdr.boxplot() and hdr.den() to allow a Box-Cox transformation to be used when computing
+	the density. This allows the density estimate to be non-zero only on the positive real line.
+	
 Changes in v2.11
     * Added hdrbw() from Matt Wand to compute better bandwidths for hdr(), hdr.den() and hdr.boxplot().
     * Fixed a few bugs in the help files.
