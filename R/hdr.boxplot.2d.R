@@ -1,4 +1,5 @@
-hdr.boxplot.2d <- function(x, y, prob=c(0.01,0.50), h, show.points=FALSE, xlab="", ylab="", kde.package=c("ash","ks"),...)
+hdr.boxplot.2d <- function(x, y, prob=c(0.01,0.50), h, show.points=FALSE, xlab="", ylab="", kde.package=c("ash","ks"),
+    shadecols=gray((9:1)/10), pointcol=1, ...)
 {
     # Plots bivariate HDRs in form of boxplot.
     kde.package <- match.arg(kde.package)
@@ -20,26 +21,25 @@ hdr.boxplot.2d <- function(x, y, prob=c(0.01,0.50), h, show.points=FALSE, xlab="
         den <- kde(x=X,H=h)
         den <- list(x=den$eval.points[[1]],y=den$eval.points[[2]],z=den$estimate)
     }
-    plothdr2d(x, y, den, prob, show.points=show.points, xlab=xlab, ylab=ylab, ...)
+    plothdr2d(x, y, den, prob, show.points=show.points, xlab=xlab, ylab=ylab, shadecols=shadecols, pointcol=pointcol, ...)
 }
 
 plothdr2d <- function(x, y, den, alpha=c(0.01,0.05,0.50), shaded=TRUE, show.points=TRUE,
-        outside.points=TRUE, pch=19, ...)
+        outside.points=TRUE, pch=19, shadecols, pointcol, ...)
 {
-    cols <- gray((9:1)/10)
     hdr <- hdr.info.2d(x, y, den, alpha=alpha)
     if(shaded)
-        hdrcde.filled.contour(den$x,den$y,den$z,levels=c(hdr$falpha,1e10),col=cols,...)
+        hdrcde.filled.contour(den$x,den$y,den$z,levels=c(hdr$falpha,1e10),col=shadecols,...)
     else
         contour(den,levels=hdr$falpha,labcex=0,...)
     if(show.points)
-        points(x,y,pch=pch)
+        points(x,y,pch=pch,col=pointcol)
     else if(outside.points)
     {
         index <- (hdr$fxy < 0.99999*min(hdr$falpha))
-        points(x[index], y[index], pch=pch)
+        points(x[index], y[index], pch=pch,col=pointcol)
     }
-    points(hdr$mode[1],hdr$mode[2],pch="o")
+    points(hdr$mode[1],hdr$mode[2],pch="o",col=pointcol)
     invisible(hdr)
 }
 

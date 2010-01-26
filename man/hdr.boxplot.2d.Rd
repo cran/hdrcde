@@ -6,7 +6,7 @@ Calculates and plots highest density regions in two dimensions, including the
 bivariate HDR boxplot.}
 \usage{
 hdr.boxplot.2d(x, y, prob=c(0.01,0.50), h, show.points = FALSE, 
-    xlab="", ylab="",  kde.package=c("ash","ks"), ...)
+    xlab="", ylab="",  kde.package=c("ash","ks"), shadecols, pointcol, ...)
 }
 \arguments{
   \item{x}{Numeric vector}
@@ -18,6 +18,8 @@ hdr.boxplot.2d(x, y, prob=c(0.01,0.50), h, show.points = FALSE,
   \item{xlab}{Label for x-axis.}
   \item{ylab}{Label for y-axis.}
   \item{kde.package}{Package to be used in calculating the kernel density estimate.}
+  \item{shadecols}{Colors for shaded regions}
+  \item{pointcol}{Color for outliers and mode}
   \item{\dots}{Other arguments to be passed to plot.}
 }
 
