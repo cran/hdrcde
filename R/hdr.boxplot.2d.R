@@ -56,35 +56,25 @@ hdrcde.filled.contour <- function (x,y,z, xlim = range(x, finite = TRUE),
     asp = NA, xaxs = "i", yaxs = "i", las = 1, 
     axes = TRUE, frame.plot = axes, ...) 
 {
-    if (any(diff(x) <= 0) || any(diff(y) <= 0)) 
-        stop("increasing 'x' and 'y' values expected")
-#    mar.orig <- (par.orig <- par(c("mar", "las", "mfrow")))$mar
-#    on.exit(par(par.orig))
-#    mar <- mar.orig
-#    mar[4] <- 1
-#    par(mar = mar)
-    plot.new()
-    plot.window(xlim, ylim, "", xaxs = xaxs, yaxs = yaxs, asp = asp)
-    if (!is.matrix(z) || nrow(z) <= 1 || ncol(z) <= 1) 
-        stop("no proper 'z' matrix specified")
-    if (!is.double(z)) 
-        storage.mode(z) <- "double"
-    .Internal(filledcontour(as.double(x), as.double(y), z, as.double(levels), 
-        col = col))
-    if (missing(plot.axes)) {
-        if (axes) {
-            title(main = "", xlab = "", ylab = "")
-            Axis(x, side = 1)
-            Axis(y, side = 2)
-        }
+  if (any(diff(x) <= 0) || any(diff(y) <= 0)) 
+      stop("increasing 'x' and 'y' values expected")
+  plot.new()
+  plot.window(xlim, ylim, "", xaxs = xaxs, yaxs = yaxs, asp = asp)
+  .filled.contour(x,y,z,levels,col)
+  if (missing(plot.axes)) {
+    if (axes) {
+      title(main = "", xlab = "", ylab = "")
+      Axis(x, side = 1)
+      Axis(y, side = 2)
     }
-    else plot.axes
-    if (frame.plot) 
-        box()
-    if (missing(plot.title)) 
-        title(...)
-    else plot.title
-    invisible()
+  }
+  else plot.axes
+  if (frame.plot) 
+      box()
+  if (missing(plot.title)) 
+      title(...)
+  else plot.title
+  invisible()
 }
 
 
