@@ -2,7 +2,7 @@
 \alias{hdrbw}
 \title{Highest Density Region Bandwidth}
 
-\description{Calculates optimal bandwidth for 1-dimensional highest density regions}
+\description{Estimates the optimal bandwidth for 1-dimensional highest density regions}
 
 \usage{
 hdrbw(x, HDRlevel, gridsize = 801, nMChdr = 1e+06, graphProgress = FALSE) 
@@ -30,9 +30,9 @@ progress of the bandwidth selection algorithm are produced.}
   Hyndman, R.J. (1996). Computing and graphing highest density regions. 
   \emph{The American Statistician}, \bold{50}, 120-126.
   
-  Samworth, R.J., and Wand, M.P. (2009).  Asymptotics and optimal 
-  bandwidth selection for highest density region estimation.  
-  Working paper. \url{http://www.uow.edu.au/~mwand/hdrpap.pdf}.
+  Samworth, R.J. and Wand, M.P. (2010). Asymptotics and optimal bandwidth 
+  selection for highest density region estimation. 
+  \emph{The Annals of Statistics}, \bold{38}, 1767-1792.
 }
 
 \author{Matt Wand}

@@ -36,8 +36,8 @@ hdr.boxplot(x, prob = c(99, 50), h=hdrbw(BoxCox(x,lambda),mean(prob)), lambda=1,
 }
 \details{Either \code{x} or \code{den} must be provided. When \code{x} is provided, the density is estimated using
 kernel density estimation. A Box-Cox transformation is used if \code{lambda!=1}, as described in Wand, Marron and 
-Ruppert (1991). This allows the density estimate to be non-zero only on the positive real line. The kernel bandwidth is 
-selected using the algorithm of Samworth and Wand (2009).
+Ruppert (1991). This allows the density estimate to be non-zero only on the positive real line. The default kernel bandwidth \code{h} is 
+selected using the algorithm of Samworth and Wand (2010).
 
 Hyndman's (1996) density quantile algorithm is used for calculation. \code{hdr.den} plots the density with the HDRs 
 superimposed. \code{hdr.boxplot} displays a boxplot based on HDRs.
@@ -50,9 +50,9 @@ superimposed. \code{hdr.boxplot} displays a boxplot based on HDRs.
 \references{Hyndman, R.J. (1996) Computing and graphing highest density regions.
 \emph{American Statistician}, \bold{50}, 120-126.
 
-Samworth, R.J., and Wand, M.P. (2009).  Asymptotics and optimal 
-bandwidth selection for highest density region estimation.  
-Working paper. \url{http://www.uow.edu.au/~mwand/hdrpap.pdf}.
+ Samworth, R.J. and Wand, M.P. (2010). Asymptotics and optimal bandwidth 
+  selection for highest density region estimation. 
+  \emph{The Annals of Statistics}, \bold{38}, 1767-1792.
   
 Wand, M.P., Marron, J S., Ruppert, D. (1991) Transformations in density estimation.
 \emph{Journal of the American Statistical Association}, \bold{86}, 343-353.
