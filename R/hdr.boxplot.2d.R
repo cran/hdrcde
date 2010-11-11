@@ -1,14 +1,20 @@
 hdr.boxplot.2d <- function(x, y, prob=c(0.01,0.50), h, show.points=FALSE, xlab="", ylab="", kde.package=c("ash","ks"),
-    shadecols=gray((9:1)/10), pointcol=1, ...)
+    shadecols=gray((9:1)/10), pointcol=1, xextend=0.15,yextend=0.15,...)
 {
     # Plots bivariate HDRs in form of boxplot.
     kde.package <- match.arg(kde.package)
+    # Find ranges for estimates
+    xr <- diff(range(x,na.rm=TRUE))
+    yr <- diff(range(y,na.rm=TRUE))
+    xr <- c(min(x)-xr*xextend,max(x)+xr*xextend)
+    yr <- c(min(y)-yr*yextend,max(y)+yr*yextend)
+    
     if(kde.package=="ash")
     {
         require(ash)
         if(missing(h))
             h <- c(5,5)
-        den <- ash2(bin2(cbind(x,y)),h)
+        den <- ash2(bin2(cbind(x,y),rbind(xr,yr)),h)
     }
     else
     {
@@ -18,7 +24,7 @@ hdr.boxplot.2d <- function(x, y, prob=c(0.01,0.50), h, show.points=FALSE, xlab="
             h <- Hpi.diag(X,binned=TRUE)
         else
             h <- diag(h)
-        den <- kde(x=X,H=h)
+        den <- kde(x=X,H=h,xmin=c(xr[1],yr[1]),xmax=c(xr[2],yr[2]))
         den <- list(x=den$eval.points[[1]],y=den$eval.points[[2]],z=den$estimate)
     }
     plothdr2d(x, y, den, prob, show.points=show.points, xlab=xlab, ylab=ylab, shadecols=shadecols, pointcol=pointcol, ...)

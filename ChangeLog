@@ -1,3 +1,6 @@
+Changes in v2.15
+    * Added option to control limits of density estimate in hdr.boxplot.2d()
+
 Changes in v2.14
     * Updated references for hdrbw().
 
