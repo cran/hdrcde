@@ -4,20 +4,20 @@
 \alias{hdr}
 \alias{hdr.boxplot}
 \alias{hdr.den}
-\alias{hdr.den}
-\alias{hdr.boxplot}
 \title{Highest Density Regions}
 \usage{
 hdr(x = NULL, prob = c(50, 95, 99), den = NULL, h = hdrbw(BoxCox(x,
   lambda), mean(prob)), lambda = 1, nn = 5000, all.modes = FALSE)
 
 hdr.den(x, prob = c(50, 95, 99), den, h = hdrbw(BoxCox(x, lambda),
-  mean(prob)), lambda = 1, xlab = NULL, ylab = "Density", ylim = NULL,
-  plot.lines = TRUE, col = 2:8, ...)
+  mean(prob)), lambda = 1, xlab = NULL, ylab = "Density",
+  ylim = NULL, plot.lines = TRUE, col = 2:8, bgcol = "gray",
+  legend = FALSE, ...)
 
-hdr.boxplot(x, prob = c(99, 50), h = hdrbw(BoxCox(x, lambda), mean(prob)),
-  lambda = 1, boxlabels = "", col = gray((9:1)/10), main = "",
-  xlab = "", ylab = "", pch = 1, ...)
+hdr.boxplot(x, prob = c(99, 50), h = hdrbw(BoxCox(x, lambda),
+  mean(prob)), lambda = 1, boxlabels = "", col = gray((9:1)/10),
+  main = "", xlab = "", ylab = "", pch = 1, border = 1,
+  outline = TRUE, space = 0.25, ...)
 }
 \arguments{
 \item{x}{Numeric vector containing data. In \code{hdr} and \code{hdr.den},
@@ -51,6 +51,10 @@ using lines.}
 
 \item{col}{Colours for regions of each box.}
 
+\item{bgcol}{Colours for the background behind the boxes. Default \code{"gray"}, if \code{NULL} no box is drawn.}
+
+\item{legend}{If \code{TRUE} add a legend on the right of the boxes.}
+
 \item{\dots}{Other arguments passed to plot.}
 
 \item{boxlabels}{Label for each box plotted.}
@@ -58,6 +62,12 @@ using lines.}
 \item{main}{Overall title for the plot.}
 
 \item{pch}{Plotting character.}
+
+\item{border}{Width of border of box.}
+
+\item{outline}{If not <code>TRUE</code>, the outliers are not drawn.}
+
+\item{space}{The space between each box, between 0 and 0.5.}
 }
 \value{
 \code{hdr.boxplot} retuns nothing. \code{hdr} and \code{hdr.den}
