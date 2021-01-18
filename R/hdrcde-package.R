@@ -1,13 +1,13 @@
 #' @importFrom utils packageVersion
-#' @importFrom grDevices cm.colors gray n2mfrow
+#' @importFrom grDevices cm.colors gray n2mfrow rgb col2rgb
 #' @importFrom graphics .filled.contour Axis abline axis
 #' @importFrom graphics box contour lines matpoints mtext par
 #' @importFrom graphics persp plot plot.default plot.new plot.window
 #' @importFrom graphics points polygon text title
 #' @importFrom stats approx density deviance dnorm fitted
-#' @importFrom stats ksmooth lm nlm pnorm predict qnorm
+#' @importFrom stats ksmooth lm nlm pnorm predict qnorm uniroot
 #' @importFrom stats quantile residuals rnorm runif sd var
-#' @importFrom utils head
+#' @importFrom utils head tail
 #'
 #' @useDynLib hdrcde, .registration = TRUE
 NULL
@@ -46,7 +46,6 @@ NULL
 #' Transportation Studies, University of California, Berkeley.
 #' @keywords datasets
 #' @examples
-#'
 #' plot(lane2)
 #' plot(lane3)
 "lane2"
@@ -65,7 +64,6 @@ NULL
 #' @keywords datasets
 #' @examples
 #' plot(maxtemp)
-#'
 "maxtemp"
 
 

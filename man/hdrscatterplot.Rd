@@ -4,8 +4,14 @@
 \alias{hdrscatterplot}
 \title{Scatterplot showing bivariate highest density regions}
 \usage{
-hdrscatterplot(x, y, levels = c(1, 50, 99), kde.package = c("ash",
-  "ks"), noutliers = NULL)
+hdrscatterplot(
+  x,
+  y,
+  levels = c(1, 50, 99),
+  kde.package = c("ash", "ks"),
+  noutliers = NULL,
+  label = NULL
+)
 }
 \arguments{
 \item{x}{Numeric vector or matrix with 2 columns.}
@@ -19,6 +25,8 @@ estimate when \code{den=NULL}.}
 
 \item{noutliers}{Number of outliers to be labelled. By default, all points
 outside the largest HDR are labelled.}
+
+\item{label}{Label of outliers of same length as \code{x} and \code{y}. By default, all outliers are labelled as the row index of the point \code{(x, y)}.}
 }
 \description{
 Produces a scatterplot where the points are coloured according to the
@@ -32,10 +40,10 @@ compute the HDRs. The scatterplot of (x,y) is created where the points are
 coloured according to which HDR they fall. A ggplot object is returned.
 }
 \examples{
-
 x <- c(rnorm(200, 0, 1), rnorm(200, 4, 1))
 y <- c(rnorm(200, 0, 1), rnorm(200, 4, 1))
 hdrscatterplot(x, y)
+hdrscatterplot(x, y, label = paste0("p", 1:length(x)))
 }
 \seealso{
 \code{\link{hdr.boxplot.2d}}
